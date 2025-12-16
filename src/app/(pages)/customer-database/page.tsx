@@ -22,7 +22,10 @@ import { useRouter } from 'next/navigation';
 const CustomerDatabase = () => {
   // const navigate = useNavigate();
   const router = useRouter()
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [isMobile, setIsMobile] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 1024;
+  });
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [showProfile, setShowProfile] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -172,6 +175,8 @@ const CustomerDatabase = () => {
   ];
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
     };

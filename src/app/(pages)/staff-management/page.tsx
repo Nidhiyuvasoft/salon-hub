@@ -20,7 +20,10 @@ import {
 } from "./types";
 
 const StaffManagement = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [isMobile, setIsMobile] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth < 1024;
+  });
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
   );
@@ -31,6 +34,8 @@ const StaffManagement = () => {
   const [performancePeriod, setPerformancePeriod] = useState<string>("month");
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
     };

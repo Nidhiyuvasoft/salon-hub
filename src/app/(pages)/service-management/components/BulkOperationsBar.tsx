@@ -53,8 +53,8 @@ const BulkOperationsBar = ({
   ];
 
   const statusOptions = [
-    { value: true, label: 'Active' },
-    { value: false, label: 'Inactive' },
+    { value: 'true', label: 'Active' },
+    { value: 'false', label: 'Inactive' },
   ];
 
   const categoryOptions = categories.map(cat => ({
@@ -94,8 +94,8 @@ const BulkOperationsBar = ({
           {operationType === 'status' && (
             <Select
               options={statusOptions}
-              value={statusValue}
-              onChange={(value) => setStatusValue(value as boolean)}
+              value={statusValue.toString()} // Convert boolean to string
+              onChange={(value) => setStatusValue(value === 'true')} // Convert string back to boolean
               placeholder="Select status"
             />
           )}
