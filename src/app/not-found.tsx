@@ -2,12 +2,9 @@
 import React from 'react';
 import Button from './components/ui/Button';
 import { useRouter } from 'next/navigation';
-// import { useRouter } from 'next/router';
-// import { useNavigate } from 'react-router-dom';
-// import Button from '../components/ui/Button';
 
 const NotFound: React.FC = () => {
-//   const navigate = useNavigate();
+
 
   const router = useRouter();
 

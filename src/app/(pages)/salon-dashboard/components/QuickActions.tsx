@@ -1,4 +1,3 @@
-// import { useNavigate } from 'react-router-dom';
 import { QuickAction } from '../types';
 import Icon from '../../../components/AppIcon';
 import { useRouter } from 'next/navigation';
@@ -8,7 +7,6 @@ interface QuickActionsProps {
 }
 
 const QuickActions = ({ actions }: QuickActionsProps) => {
-  // const navigate = useNavigate();
   const router = useRouter();
 
   return (

@@ -1,185 +1,24 @@
-// 'use client';
+"use client";
 
-// import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-// import { fetchOwners } from '@/app/store/slices/ownerSlice';
-// import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
+import { fetchOwners, approveOwner, deleteOwner } from "@/app/store/slices/ownerSlice";
+import { useEffect } from "react";
 
-// import Sidebar from '@/app/components/Sidebar';
-// import Header from '@/app/components/Header';
-// import MobileBottomNav from '@/app/components/MobileBottomNav';
-// import Icon from '@/app/components/AppIcon';
-
-// const GetAllOwners = () => {
-//   const dispatch = useAppDispatch();
-//   const { owners, isLoading, error } = useAppSelector(
-//     (state) => state.owner
-//   );
-
-//   useEffect(() => {
-//     dispatch(fetchOwners({ page: 1, limit: 10 }));
-//   }, [dispatch]);
-
-//   return (
-//     <div className="min-h-screen bg-background">
-//       {/* Sidebar */}
-//       <Sidebar userRole="super_admin" />
-
-//       {/* Header */}
-//       <Header
-//         user={{
-//           name: 'Super Admin',
-//           email: 'admin@salonhub.com',
-//           role: 'super_admin',
-//         }}
-//         notifications={0}
-//         onLogout={() => {}}
-//         onProfileClick={() => {}}
-//         onNotificationClick={() => {}}
-//       />
-
-//       {/* Main Content */}
-//       <main className="lg:ml-sidebar pt-header pb-bottom-nav lg:pb-0">
-//         <div className="p-4 lg:p-6 space-y-6">
-//           {/* Page Header */}
-//           <div>
-//             <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
-//               Salon Owners
-//             </h1>
-//             <p className="text-muted-foreground">
-//               View and manage all registered salon owners
-//             </p>
-//           </div>
-
-//           {/* States */}
-//           {isLoading && (
-//             <div className="bg-card border border-border rounded-lg p-12 text-center">
-//               <Icon
-//                 name="Loader"
-//                 size={40}
-//                 className="mx-auto mb-4 animate-spin text-muted-foreground"
-//               />
-//               <p className="text-muted-foreground">Loading owners...</p>
-//             </div>
-//           )}
-
-//           {error && (
-//             <div className="bg-card border border-destructive rounded-lg p-6 text-center text-destructive">
-//               {error}
-//             </div>
-//           )}
-
-//           {!isLoading && !error && owners.length === 0 && (
-//             <div className="bg-card rounded-lg border border-border p-12 text-center">
-//               <Icon
-//                 name="Users"
-//                 size={64}
-//                 className="text-muted-foreground mx-auto mb-4"
-//               />
-//               <h3 className="text-xl font-semibold text-foreground mb-2">
-//                 No owners found
-//               </h3>
-//               <p className="text-muted-foreground">
-//                 There are no salon owners registered yet.
-//               </p>
-//             </div>
-//           )}
-
-//           {/* Table */}
-//           {!isLoading && !error && owners.length > 0 && (
-//             <div className="bg-card rounded-lg border border-border overflow-hidden">
-//               <div className="overflow-x-auto">
-//                 <table className="w-full">
-//                   <thead className="bg-muted">
-//                     <tr>
-//                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-//                         Email
-//                       </th>
-//                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-//                         Phone
-//                       </th>
-//                       {/* <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-//                         Address
-//                       </th> */}
-//                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-//                         Status
-//                       </th>
-//                     </tr>
-//                   </thead>
-
-//                   <tbody className="divide-y divide-border">
-//                     {owners.map((owner) => (
-//                       <tr
-//                         key={owner._id}
-//                         className="hover:bg-muted/50 transition-colors"
-//                       >
-//                         <td className="px-4 py-3 text-sm text-foreground">
-//                           {/* {owner.email} */}
-//                           <td>{owner.userId.email}</td>
-//                         </td>
-//                         <td className="px-4 py-3 text-sm text-foreground">
-//                           {/* {owner.phoneNumber || '-'} */}
-//                           <td>{owner.userId.phoneNumber || '-'}</td>
-//                         </td>
-//                         {/* <td className="px-4 py-3 text-sm text-foreground">
-//                           {owner.address || '-'}
-//                         </td> */}
-//                         <td className="px-4 py-3 text-sm">
-//                           {owner.isApproved ? (
-//                             <span className="inline-flex items-center gap-1 text-green-600 font-medium">
-//                               <Icon name="CheckCircle" size={16} />
-//                               Verified
-//                             </span>
-//                           ) : (
-//                             <span className="inline-flex items-center gap-1 text-yellow-600 font-medium">
-//                               <Icon name="Clock" size={16} />
-//                               Pending
-//                             </span>
-//                           )}
-//                         </td>
-//                       </tr>
-//                     ))}
-//                   </tbody>
-//                 </table>
-//               </div>
-//             </div>
-//           )}
-//         </div>
-//       </main>
-
-//       <MobileBottomNav userRole="super_admin" />
-//     </div>
-//   );
-// };
-
-// export default GetAllOwners;
-
-
-
-
-
-'use client';
-
-import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import {
-  fetchOwners,
-  approveOwner,
-} from '@/app/store/slices/ownerSlice';
-import { useEffect } from 'react';
-
-import Sidebar from '@/app/components/Sidebar';
-import Header from '@/app/components/Header';
-import MobileBottomNav from '@/app/components/MobileBottomNav';
-import Icon from '@/app/components/AppIcon';
+import Sidebar from "@/app/components/Sidebar";
+import Header from "@/app/components/Header";
+import MobileBottomNav from "@/app/components/MobileBottomNav";
+import Icon from "@/app/components/AppIcon";
 
 const GetAllOwners = () => {
   const dispatch = useAppDispatch();
-  const { owners, isLoading, error } = useAppSelector(
-    (state) => state.owner
-  );
+  const { owners, isLoading, error } = useAppSelector((state) => state.owner);
 
   useEffect(() => {
     dispatch(fetchOwners({ page: 1, limit: 10 }));
   }, [dispatch]);
+  const handleDelete = (ownerId : string)=>{
+    dispatch(deleteOwner(ownerId))
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -187,9 +26,9 @@ const GetAllOwners = () => {
 
       <Header
         user={{
-          name: 'Super Admin',
-          email: 'admin@salonhub.com',
-          role: 'super_admin',
+          name: "Super Admin",
+          email: "admin@salonhub.com",
+          role: "super_admin",
         }}
         notifications={0}
         onLogout={() => {}}
@@ -200,9 +39,7 @@ const GetAllOwners = () => {
       <main className="lg:ml-sidebar pt-header pb-bottom-nav lg:pb-0">
         <div className="p-4 lg:p-6 space-y-6">
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold">
-              Salon Owners
-            </h1>
+            <h1 className="text-2xl lg:text-3xl font-bold">Salon Owners</h1>
             <p className="text-muted-foreground">
               View and manage all registered salon owners
             </p>
@@ -219,17 +56,16 @@ const GetAllOwners = () => {
                     <th className="px-4 py-3 text-left">Email</th>
                     <th className="px-4 py-3 text-left">Phone</th>
                     <th className="px-4 py-3 text-left">Status</th>
+                    <th className="px-4 py-3 text-left">Action</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   {owners.map((owner) => (
                     <tr key={owner._id} className="border-t">
+                      <td className="px-4 py-3">{owner.userId.email}</td>
                       <td className="px-4 py-3">
-                        {owner.userId.email}
-                      </td>
-                      <td className="px-4 py-3">
-                        {owner.userId.phoneNumber || '-'}
+                        {owner.userId.phoneNumber || "-"}
                       </td>
                       <td className="px-4 py-3">
                         {owner.isApproved ? (
@@ -239,14 +75,37 @@ const GetAllOwners = () => {
                           </span>
                         ) : (
                           <button
-                            onClick={() =>
-                              dispatch(approveOwner(owner._id))
-                            }
+                            onClick={() => dispatch(approveOwner(owner._id))}
                             className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
                           >
                             Approve
                           </button>
                         )}
+                      </td>
+                      <td className="flex items-center gap-3">
+                        <button
+                          // onClick={() => handleView(user)}
+                          className="text-gray-500 hover:text-indigo-600 transition"
+                          title="View"
+                        >
+                          👁️
+                        </button>
+
+                        <button
+                          // onClick={() => handleUpdate(user)}
+                          className="text-gray-500 hover:text-blue-600 transition"
+                          title="Edit"
+                        >
+                          ✏️
+                        </button>
+
+                        <button
+                          onClick={() => handleDelete(owner._id)}
+                          className="text-gray-500 hover:text-red-600 transition"
+                          title="Delete"
+                        >
+                          🗑️
+                        </button>
                       </td>
                     </tr>
                   ))}

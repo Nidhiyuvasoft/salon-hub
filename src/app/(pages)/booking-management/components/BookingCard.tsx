@@ -1,7 +1,6 @@
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 import { Booking } from '../types';
-// import { Booking } from '../types';
 
 interface BookingCardProps {
   booking: Booking;

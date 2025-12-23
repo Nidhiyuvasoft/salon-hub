@@ -60,28 +60,6 @@ const RegistrationForm = ({
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
-      {/* <Input
-        label="Salon Name"
-        type="text"
-        placeholder="Enter your salon name"
-        value={formData.salonName}
-        onChange={(e) => onInputChange('salonName', e.target.value)}
-        error={errors.salonName}
-        required
-        disabled={isSubmitting}
-      /> */}
-
-      {/* <Input
-        label="Owner Name"
-        type="text"
-        placeholder="Enter owner's full name"
-        value={formData.ownerName}
-        onChange={(e) => onInputChange('ownerName', e.target.value)}
-        error={errors.ownerName}
-        required
-        disabled={isSubmitting}
-      /> */}
-
       <Input
         label="Mobile Number"
         type="tel"
@@ -89,7 +67,6 @@ const RegistrationForm = ({
         value={formData.mobileNumber}
         onChange={(e) => onInputChange('mobileNumber', e.target.value)}
         error={errors.mobileNumber}
-        // description="We'll send an OTP to this number via WhatsApp"
         required
         disabled={isSubmitting}
       />

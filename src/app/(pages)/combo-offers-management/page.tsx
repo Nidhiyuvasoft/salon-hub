@@ -13,6 +13,7 @@ import ComboPreviewModal from './components/ComboPreviewModal';
 import Button from '../../components/ui/Button';
 import Icon from '../../components/AppIcon';
 import { useAppSelector } from '../../store/hooks';
+import AuthGuard from '../../components/AuthGuard';
 
 const ComboOffersManagement = () => {
   const authUser = useAppSelector((state) => state.auth.user);
@@ -361,7 +362,8 @@ const ComboOffersManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <AuthGuard>
+      <div className="min-h-screen bg-background">
       <Sidebar userRole={user.role} />
       <Header 
         user={user} 
@@ -469,6 +471,7 @@ const ComboOffersManagement = () => {
         combo={previewCombo}
       />
     </div>
+    </AuthGuard>
   );
 };
 

@@ -6,13 +6,7 @@ import MobileBottomNav from '../../components/MobileBottomNav';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
 import { useAppSelector } from '../../store/hooks';
-
-// import CalendarHeader from './components/CalendarHeader';
-// import DayView from './components/DayView';
-// import WeekView from './components/WeekView';
-// import BookingForm from './components/BookingForm';
-// import BookingDetailsModal from './components/BookingDetailsModal';
-// import QuickFilters from './components/QuickFilters';
+import AuthGuard from '../../components/AuthGuard';
 import { ViewMode,Booking,
       Customer,
       Service,
@@ -398,7 +392,8 @@ const BookingManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <AuthGuard>
+      <div className="min-h-screen bg-background">
       <Sidebar userRole={currentUser.role} />
       <Header user={currentUser} notifications={3} />
 
@@ -532,6 +527,7 @@ const BookingManagement = () => {
 
       <MobileBottomNav userRole={currentUser.role} />
     </div>
+    </AuthGuard>
   );
 };
 

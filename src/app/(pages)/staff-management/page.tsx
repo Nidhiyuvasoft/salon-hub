@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-// import { Helmet } from "react-helmet";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 import MobileBottomNav from "../../components/MobileBottomNav";
@@ -19,6 +18,7 @@ import {
   Service,
 } from "./types";
 import { useAppSelector } from '../../store/hooks';
+import AuthGuard from '../../components/AuthGuard';
 
 const StaffManagement = () => {
   const authUser = useAppSelector((state) => state.auth.user);
@@ -281,39 +281,7 @@ const StaffManagement = () => {
     setIsDetailsOpen(true);
   };
 
-  // const handleSaveEmployee = (data: EmployeeFormData) => {
-  //   if (editingEmployee) {
-  //     setEmployees((prev) =>
-  //       prev.map((emp) =>
-  //         emp.id === editingEmployee.id
-  //           ? {
-  //               ...emp,
-  //               ...data,
-  //             }
-  //           : emp
-  //       )
-  //     );
-  //   } else {
-  //     const newEmployee: Employee = {
-  //       id: Date.now().toString(),
-  //       ...data,
-  //       role: data.role as Employee["role"], 
-  //       status: "active",
-  //       joinDate: new Date().toISOString(),
-  //       avatar: undefined,
-  //       performanceMetrics: {
-  //         completedServices: 0,
-  //         customerRating: 0,
-  //         revenueGenerated: 0,
-  //         bookingCompletionRate: 0,
-  //       },
-  //     };
-  //     setEmployees((prev) => [...prev, newEmployee]);
-  //   }
-  //   setIsFormOpen(false);
-  //   setEditingEmployee(null);
-  // };
-
+  
   // fixed ts error in handleSaveEmployee
   const handleSaveEmployee = (data: EmployeeFormData) => {
     if (editingEmployee) {
@@ -375,7 +343,8 @@ const StaffManagement = () => {
     ) / employees.length;
 
   return (
-    <>
+    <AuthGuard>
+      <>
       
         <title>Staff Management - SalonHub</title>
         <meta
@@ -618,6 +587,7 @@ const StaffManagement = () => {
         )}
       </div>
     </>
+    </AuthGuard>
   );
 };
 

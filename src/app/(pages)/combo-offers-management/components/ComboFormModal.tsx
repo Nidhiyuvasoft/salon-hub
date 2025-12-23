@@ -247,7 +247,6 @@ const ComboFormModal: React.FC<ComboFormModalProps> = ({
                 />
               </div>
             </div>
-
             {/* Right Column */}
             <div className="space-y-4">
               <div className="bg-muted/50 border border-border rounded-lg p-4">

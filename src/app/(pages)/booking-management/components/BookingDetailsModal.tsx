@@ -5,7 +5,7 @@ import Image from '../../../components/AppImage';
 import Button from '../../../components/ui/Button';
 import Select from '../../../components/ui/Select';
 import { Booking } from '../types';
-// import { Booking } from '../types';
+
 
 interface BookingDetailsModalProps {
   booking: Booking;

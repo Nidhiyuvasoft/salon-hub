@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import MobileBottomNav from '../../components/MobileBottomNav';
@@ -19,9 +18,9 @@ import {
 } from './types';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '../../store/hooks';
+import AuthGuard from '../../components/AuthGuard';
 
 const CustomerDatabase = () => {
-  // const navigate = useNavigate();
   const router = useRouter()
   const authUser = useAppSelector((state) => state.auth.user);
   const [isMobile, setIsMobile] = useState<boolean>(() => {
@@ -252,7 +251,8 @@ const CustomerDatabase = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <AuthGuard>
+      <div className="min-h-screen bg-background">
       <Sidebar userRole={user.role} />
       <Header
         user={user}
@@ -362,6 +362,7 @@ const CustomerDatabase = () => {
         />
       )}
     </div>
+    </AuthGuard>
   );
 };
 
