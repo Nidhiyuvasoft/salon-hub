@@ -29,9 +29,11 @@ import ConfirmModal from "@/app/components/ui/ConfirmModal";
 interface EmployeeFormModalProps {
   employee: Employee | null;
   onClose: () => void;
+  role: StaffRoles[];          
+  setRole: React.Dispatch<React.SetStateAction<StaffRoles[]>>; 
 }
 
-const EmployeeFormModal = ({ employee, onClose }: EmployeeFormModalProps) => {
+const EmployeeFormModal = ({ employee, onClose, role, setRole }: EmployeeFormModalProps) => {
   const initialValues: EmployeeFormData = {
     name: "",
     role: "",
@@ -61,9 +63,10 @@ const EmployeeFormModal = ({ employee, onClose }: EmployeeFormModalProps) => {
     useState<EmployeeFormData>(initialValues);
   const [loadingEmployee, setLoadingEmployee] = useState(false);
   const [isAddRoleOpen, setIsAddRoleOpen] = useState(false);
-  const [roles, setRoles] = useState<StaffRoles[]>([]);
+//  const [roles, setRoles] = useState<StaffRoles[]>([]);
   const formikRef = useRef<any>(null);
 
+  
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -90,21 +93,21 @@ const EmployeeFormModal = ({ employee, onClose }: EmployeeFormModalProps) => {
     description: service.category?.name || "",
   }));
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const res = await rolesApi.getAllRoles();
-        if (res?.data) {
-          setRoles(res.data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch roles", err);
-      }
-    };
-    fetchRoles();
-  }, []);
+  // useEffect(() => {
+  //   const fetchRoles = async () => {
+  //     try {
+  //       const res = await rolesApi.getAllRoles();
+  //       if (res?.data) {
+  //         setRoles(res.data);
+  //       }
+  //     } catch (err) {
+  //       console.error("Failed to fetch roles", err);
+  //     }
+  //   };
+  //   fetchRoles();
+  // }, []);
 
-  const roleFilterOptions: RoleFilter[] = roles.map((role) => ({
+  const roleFilterOptions: RoleFilter[] = role.map((role) => ({
     value: role._id,
     label: role.name,
   }));
@@ -237,7 +240,7 @@ const EmployeeFormModal = ({ employee, onClose }: EmployeeFormModalProps) => {
 
     // Prevent duplicate roles
     if (
-      roles.some(
+      role.some(
         (role) => role.name.toLowerCase() === trimmedName.toLowerCase()
       )
     ) {
@@ -258,7 +261,7 @@ const EmployeeFormModal = ({ employee, onClose }: EmployeeFormModalProps) => {
         };
 
         // Update roles list
-        setRoles((prev) => [...prev, newRole]);
+        setRole((prev) => [...prev, newRole]);
 
         // Auto-select new role in form
         formikRef.current?.setFieldValue("role", newRole._id);

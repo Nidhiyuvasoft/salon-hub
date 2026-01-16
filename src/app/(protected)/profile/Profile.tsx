@@ -20,28 +20,20 @@ interface ProfileItemProps {
 const ProfilePage = () => {
   const router = useRouter();
   const { user } = useAppSelector((state: any) => state.auth);
-  const { profile, isLoading } = useAppSelector((state) => state.profile);
+  const { profile } = useAppSelector((state) => state.profile);
   const dispatch = useAppDispatch();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const fetchInitiatedRef = useRef(false);
-
-  // const normalizedUserRole = normalizeRole(user.role);
-
-  // useEffect(() => {
-  //   if (normalizedUserRole !== "OWNER") return;
-  //   if (!profile && !isLoading && !fetchInitiatedRef.current) {
-  //     fetchInitiatedRef.current = true;
-  //     dispatch(getProfile());
-  //   }
-  // }, [dispatch, normalizedUserRole]);
 
   if (!user) {
+    const isLogout = profile === null || profile === undefined;
+
     return (
       <div className="p-6 text-center text-muted-foreground">
-        <Loader label="Loading profile..."/>
+        <Loader label={isLogout ? "Logging out..." : "Loading profile..."} />
       </div>
     );
   }
+
   const fullName =
     user.firstName || user.lastName
       ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()
@@ -133,8 +125,9 @@ const ProfilePage = () => {
               value={
                 profile?.workingDays && profile.workingDays.length > 0
                   ? profile.workingDays
-                      .map((d: number) =>
-                        ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][d]
+                      .map(
+                        (d: number) =>
+                          ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][d]
                       )
                       .join(", ")
                   : "—"
