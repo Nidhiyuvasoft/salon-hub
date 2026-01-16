@@ -227,7 +227,7 @@ const CustomerTable = ({
                           tag
                         )}`}
                       >
-                        {tag.name || "N/A"}
+                        {tag.name ? `${tag.name}` : "-"}
                       </span>
                     ))}
                   </div>
