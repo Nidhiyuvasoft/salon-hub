@@ -11,6 +11,7 @@ export interface CreateComboPayload {
   discountedPrice: number;
   savedAmount: number;
   savedPercent: number;
+  customerEligibility: string | null;
 }
 
 export const comboApi = {
