@@ -34,12 +34,14 @@ export interface UpdateCustomerPayload {
 
 export const customerApi = {
   addCustomer: async (data: AddCustomerPayload) => {
+    console.log(data);
     try {
       const res = await api.post("/customer", data);
       showToast({
         message: res?.data?.message || "Create Customer Successfully",
         status: "success",
       });
+      console.log(res.data);
       return res.data;
     } catch (error: any) {
       showToast({
