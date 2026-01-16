@@ -1,29 +1,34 @@
-import Icon from '../../../components/AppIcon';
-import Image from '../../../components/AppImage';
-import { Customer, CustomerTag } from '../types';
+import Icon from "../../../components/AppIcon";
+import Image from "../../../components/AppImage";
+import { Customer, CustomerTag } from "../types";
 
 interface MobileCustomerCardProps {
   customer: Customer;
   onSelect: (customer: Customer) => void;
 }
 
-const MobileCustomerCard = ({ customer, onSelect }: MobileCustomerCardProps) => {
+const MobileCustomerCard = ({
+  customer,
+  onSelect,
+}: MobileCustomerCardProps) => {
   const getTagColor = (tag: CustomerTag): string => {
-    const colors: Record<CustomerTag, string> = {
-      VIP: 'bg-accent text-accent-foreground',
-      New: 'bg-primary text-primary-foreground',
-      Frequent: 'bg-success text-success-foreground',
-      Inactive: 'bg-muted text-muted-foreground',
+    const colors: Record<string, string> = {
+      VIP: "bg-accent text-accent-foreground",
+      New: "bg-primary text-primary-foreground",
+      Frequent: "bg-success text-success-foreground",
+      Inactive: "bg-muted text-muted-foreground",
+      SPECIAL: "bg-primary text-primary-foreground",
     };
-    return colors[tag];
+
+    return colors[tag?.name ?? ""] ?? "bg-muted text-muted-foreground";
   };
 
   const formatDate = (date: Date | null): string => {
-    if (!date) return 'Never';
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    if (!date) return "Never";
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     }).format(date);
   };
 
@@ -58,10 +63,12 @@ const MobileCustomerCard = ({ customer, onSelect }: MobileCustomerCardProps) => 
           <div className="flex flex-wrap gap-1">
             {customer.tags.map((tag) => (
               <span
-                key={tag}
-                className={`px-2 py-0.5 rounded-md text-xs font-medium ${getTagColor(tag)}`}
+                key={tag._id}
+                className={`px-2 py-0.5 rounded-md text-xs font-medium ${getTagColor(
+                  tag
+                )}`}
               >
-                {tag}
+                {tag.name}
               </span>
             ))}
           </div>
@@ -75,14 +82,20 @@ const MobileCustomerCard = ({ customer, onSelect }: MobileCustomerCardProps) => 
           className="p-2 rounded-md hover:bg-muted transition-smooth"
           aria-label="View details"
         >
-          <Icon name="ChevronRight" size={20} className="text-muted-foreground" />
+          <Icon
+            name="ChevronRight"
+            size={20}
+            className="text-muted-foreground"
+          />
         </button>
       </div>
 
       <div className="grid grid-cols-3 gap-2 pt-3 border-t border-border">
         <div>
           <div className="text-xs text-muted-foreground mb-1">Visits</div>
-          <div className="text-sm font-semibold text-foreground">{customer.totalVisits}</div>
+          <div className="text-sm font-semibold text-foreground">
+            {customer.totalVisits}
+          </div>
         </div>
         <div>
           <div className="text-xs text-muted-foreground mb-1">Spent</div>
@@ -92,7 +105,9 @@ const MobileCustomerCard = ({ customer, onSelect }: MobileCustomerCardProps) => 
         </div>
         <div>
           <div className="text-xs text-muted-foreground mb-1">Last Visit</div>
-          <div className="text-xs font-medium text-foreground">{formatDate(customer.lastVisit)}</div>
+          <div className="text-xs font-medium text-foreground">
+            {formatDate(customer.lastVisit)}
+          </div>
         </div>
       </div>
     </div>

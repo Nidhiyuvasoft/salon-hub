@@ -1,32 +1,42 @@
 "use client";
-import { useState } from 'react';
-import Icon from '../../../components/AppIcon';
-import Button from '../../../components/ui/Button';
-import Input from '../../../components/ui/Input';
-import Select from '../../../components/ui/Select';
-import { Checkbox } from '../../../components/ui/Checkbox';
-import { CustomerFilters as FilterType, CustomerTag } from '../types';
+
+import { useState } from "react";
+import Icon from "../../../components/AppIcon";
+import Button from "../../../components/ui/Button";
+import Input from "../../../components/ui/Input";
+import Select from "../../../components/ui/Select";
+import { Checkbox } from "../../../components/ui/Checkbox";
+import { CustomerFilters as FilterType } from "../types";
 
 interface CustomerFiltersProps {
   filters: FilterType;
   onFiltersChange: (filters: FilterType) => void;
   onExport: () => void;
   totalCustomers: number;
+  customerTags: {
+    _id: string;
+    name: string;
+  }[];
 }
 
-const CustomerFilters = ({ filters, onFiltersChange, onExport, totalCustomers }: CustomerFiltersProps) => {
+const CustomerFilters = ({
+  filters,
+  onFiltersChange,
+  onExport,
+  totalCustomers,
+  customerTags,
+}: CustomerFiltersProps) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
-
-  const tagOptions: CustomerTag[] = ['VIP', 'New', 'Frequent', 'Inactive'];
 
   const handleSearchChange = (value: string) => {
     onFiltersChange({ ...filters, searchQuery: value });
   };
 
-  const handleTagToggle = (tag: CustomerTag) => {
-    const newTags = filters.tags.includes(tag)
-      ? filters.tags.filter((t) => t !== tag)
-      : [...filters.tags, tag];
+  const handleTagToggle = (tagId: string) => {
+    const newTags = filters.tags.includes(tagId)
+      ? filters.tags.filter((id) => id !== tagId)
+      : [...filters.tags, tagId];
+
     onFiltersChange({ ...filters, tags: newTags });
   };
 
@@ -36,21 +46,22 @@ const CustomerFilters = ({ filters, onFiltersChange, onExport, totalCustomers }:
 
   const handleClearFilters = () => {
     onFiltersChange({
-      searchQuery: '',
+      searchQuery: "",
       tags: [],
-      gender: '',
-      sortBy: 'name',
-      sortOrder: 'asc',
+      gender: "",
+      sortBy: "name",
+      sortOrder: "asc",
     });
   };
 
-  const activeFilterCount = 
+  const activeFilterCount =
     (filters.searchQuery ? 1 : 0) +
     filters.tags.length +
     (filters.gender ? 1 : 0);
 
   return (
     <div className="bg-card rounded-lg border border-border p-6 space-y-4">
+      {/* Top bar */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex-1 min-w-[300px]">
           <div className="relative">
@@ -74,7 +85,7 @@ const CustomerFilters = ({ filters, onFiltersChange, onExport, totalCustomers }:
             variant="outline"
             iconName="Filter"
             iconPosition="left"
-            onClick={() => setShowAdvanced(!showAdvanced)}
+            onClick={() => setShowAdvanced((p) => !p)}
           >
             Filters
             {activeFilterCount > 0 && (
@@ -95,37 +106,49 @@ const CustomerFilters = ({ filters, onFiltersChange, onExport, totalCustomers }:
         </div>
       </div>
 
+      {/* Advanced filters */}
       {showAdvanced && (
         <div className="pt-4 border-t border-border space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Customer Tags */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
                 Customer Tags
               </label>
-              <div className="flex flex-wrap gap-2">
-                {tagOptions.map((tag) => (
-                  <label
-                    key={tag}
-                    className="flex items-center gap-2 px-3 py-2 rounded-md border border-border hover:bg-muted transition-smooth cursor-pointer"
-                  >
-                    <Checkbox
-                      checked={filters.tags.includes(tag)}
-                      onChange={() => handleTagToggle(tag)}
-                    />
-                    <span className="text-sm text-foreground">{tag}</span>
-                  </label>
-                ))}
-              </div>
+
+              {customerTags.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  No tags available
+                </p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {customerTags.map((tag) => (
+                    <label
+                      key={tag._id}
+                      className="flex items-center gap-2 px-3 py-2 rounded-md border border-border hover:bg-muted transition-smooth cursor-pointer"
+                    >
+                      <Checkbox
+                        checked={filters.tags.includes(tag._id)}
+                        onChange={() => handleTagToggle(tag._id)}
+                      />
+                      <span className="text-sm text-foreground">
+                        {tag.name}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              )}
             </div>
 
+            {/* Gender */}
             <div>
               <Select
                 label="Gender"
                 options={[
-                  { value: '', label: 'All Genders' },
-                  { value: 'male', label: 'Male' },
-                  { value: 'female', label: 'Female' },
-                  { value: 'other', label: 'Other' },
+                  { value: "", label: "All Genders" },
+                  { value: "male", label: "Male" },
+                  { value: "female", label: "Female" },
+                  { value: "other", label: "Other" },
                 ]}
                 value={filters.gender}
                 onChange={handleGenderChange}
@@ -133,10 +156,13 @@ const CustomerFilters = ({ filters, onFiltersChange, onExport, totalCustomers }:
             </div>
           </div>
 
+          {/* Footer */}
           <div className="flex items-center justify-between pt-4 border-t border-border">
             <div className="text-sm text-muted-foreground">
-              Showing {totalCustomers} customer{totalCustomers !== 1 ? 's' : ''}
+              Showing {totalCustomers} customer
+              {totalCustomers !== 1 ? "s" : ""}
             </div>
+
             {activeFilterCount > 0 && (
               <Button
                 variant="ghost"
