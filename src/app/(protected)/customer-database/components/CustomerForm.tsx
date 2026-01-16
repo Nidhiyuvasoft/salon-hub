@@ -14,7 +14,6 @@ import Loader from "@/app/components/Loader";
 import { CustomerFormikValues, CustomerTag, Customer } from "../types";
 import { customerApi } from "@/app/services/customer.api";
 import { staffApi } from "@/app/services/staff.api";
-import { customerTagApi } from "@/app/services/tags.api";
 
 const getValidationSchema = (isEditMode: boolean) =>
   Yup.object({
@@ -24,10 +23,13 @@ const getValidationSchema = (isEditMode: boolean) =>
       .required("Phone number is required"),
     email: Yup.string().email("Invalid email"),
     gender: Yup.string().required(),
-    dateOfBirth: Yup.string().required("Date of birth is required"),
+    dateOfBirth: Yup.date()
+      .typeError("Invalid date of birth")
+      .max(new Date(), "Date of birth cannot be in the future")
+      .required("Date of birth is required"),
     password: isEditMode
       ? Yup.string()
-      : Yup.string().min(8, "Minimum 8 characters"),
+      : Yup.string().min(8, "Minimum 8 characters")
   });
 
 interface CustomerFormProps {

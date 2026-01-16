@@ -33,12 +33,6 @@ const ViewAllAppointments = ({ onBookingClick }: ViewAllAppointmentsProps) => {
   const [page, setPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
 
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
-    null
-  );
-  const [isDeleting, setIsDeleting] = useState(false);
-
   const user = useAppSelector((state) => state.auth.user);
   const role = (user?.role ?? []) as ("OWNER" | "STAFF")[];
 
@@ -62,6 +56,7 @@ const ViewAllAppointments = ({ onBookingClick }: ViewAllAppointmentsProps) => {
   //   };
   //   if (role) fetchAppointments();
   // }, [role]);
+  
   useEffect(() => {
     const fetchAppointments = async () => {
       setLoading(true);
@@ -90,10 +85,10 @@ const ViewAllAppointments = ({ onBookingClick }: ViewAllAppointmentsProps) => {
     if (role?.length) fetchAppointments();
   }, [role]);
   
-  const handleDeleteClick = (bookingId: string) => {
-    setSelectedBookingId(bookingId);
-    setShowConfirmDelete(true);
-  };
+  // const handleDeleteClick = (bookingId: string) => {
+  //   setSelectedBookingId(bookingId);
+  //   setShowConfirmDelete(true);
+  // };
 
   // const confirmDelete = async () => {
   //   if (!selectedBookingId) return;
