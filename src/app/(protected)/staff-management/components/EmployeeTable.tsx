@@ -1,18 +1,11 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Icon from "../../../components/AppIcon";
-import Button from "../../../components/ui/Button";
 import { Employee, SortField, SortOrder } from "../types";
 import EmployeeAvatar from "../types/EmployeeAvatar";
 
-interface Role {
-  _id: string;
-  name: string;
-}
-
 interface EmployeeTableProps {
   employees: Employee[];
-  roles: Role[]; // ✅ ONLY ADDITION
   onEdit: (employee: Employee) => void;
   onToggleStatus: (employeeId: string) => void;
   onViewDetails: (employee: Employee) => void;
@@ -21,7 +14,6 @@ interface EmployeeTableProps {
 
 const EmployeeTable = ({
   employees,
-  roles,
   onEdit,
   onToggleStatus,
   onViewDetails,
@@ -29,11 +21,6 @@ const EmployeeTable = ({
 }: EmployeeTableProps) => {
   const [sortField, setSortField] = useState<SortField>("name");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
-
-  // ✅ ROLE ID → ROLE NAME MAP
-  const roleMap = useMemo(() => {
-    return new Map(roles.map((r) => [r._id, r.name]));
-  }, [roles]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -55,14 +42,8 @@ const EmployeeTable = ({
         break;
 
       case "role":
-        aValue =
-          typeof a.role === "string"
-            ? roleMap.get(a.role)?.toLowerCase() || ""
-            : a.role?.name?.toLowerCase() || "";
-        bValue =
-          typeof b.role === "string"
-            ? roleMap.get(b.role)?.toLowerCase() || ""
-            : b.role?.name?.toLowerCase() || "";
+        aValue = a.role?.name?.toLowerCase() || "";
+        bValue = b.role?.name?.toLowerCase() || "";
         break;
 
       case "rating":
@@ -89,7 +70,7 @@ const EmployeeTable = ({
       "Nail Technician": "bg-green-100 text-green-800",
       Receptionist: "bg-yellow-100 text-yellow-800",
       "Hair Stylist": "bg-blue-100 text-blue-800",
-      "Nails technician": "bg-green-100 text-green-800",
+      "Makeup artist": "bg-pink-100 text-pink-800",
     };
     return colors[role] || "bg-gray-100 text-gray-800";
   };
@@ -119,7 +100,7 @@ const EmployeeTable = ({
   };
 
   return (
-    <div className="bg-card rounded-lg border border-border overflow-hidden overflow-x-auto">
+    <div className="bg-card rounded-lg border border-border overflow-x-auto">
       <table className="w-full">
         <thead className="bg-muted">
           <tr>
@@ -142,6 +123,7 @@ const EmployeeTable = ({
             </th>
 
             <th className="px-6 py-4 text-left">Contact</th>
+
             <th className="px-6 py-4 text-left">
               <button
                 onClick={() => handleSort("rating")}
@@ -150,7 +132,9 @@ const EmployeeTable = ({
                 Rating <SortIcon field="rating" />
               </button>
             </th>
+
             <th className="px-6 py-4 text-left">Working Days</th>
+
             <th className="px-6 py-4 text-left">
               <button
                 onClick={() => handleSort("revenue")}
@@ -159,87 +143,94 @@ const EmployeeTable = ({
                 Revenue <SortIcon field="revenue" />
               </button>
             </th>
+
             <th className="px-6 py-4 text-left">Status</th>
             <th className="px-6 py-4 text-right">Actions</th>
           </tr>
         </thead>
 
         <tbody className="divide-y divide-border">
-          {sortedEmployees.map((employee) => {
-            const roleName =
-              typeof employee.role === "string"
-                ? roleMap.get(employee.role)
-                : employee.role?.name;
-
-            return (
-              <tr
-                key={employee.id}
-                onClick={() => onViewDetails(employee)}
-                className="hover:bg-muted/30 cursor-pointer"
-              >
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <EmployeeAvatar employee={employee} onViewDetails={onViewDetails} />
-                    <div>
-                      <div className="text-sm font-medium">{employee.name}</div>
-                      <div className="text-xs text-muted-foreground">
-                        Joined{" "}
-                        {new Date(employee.joinDate).toLocaleDateString("en-US", {
-                          month: "short",
-                          year: "numeric",
-                        })}
-                      </div>
+          {sortedEmployees.map((employee) => (
+            <tr
+              key={employee.id}
+              onClick={() => onViewDetails(employee)}
+              className="hover:bg-muted/30 cursor-pointer"
+            >
+              <td className="px-6 py-4">
+                <div className="flex items-center gap-3">
+                  <EmployeeAvatar
+                    employee={employee}
+                    onViewDetails={onViewDetails}
+                  />
+                  <div>
+                    <div className="text-sm font-medium">{employee.name}</div>
+                    <div className="text-xs text-muted-foreground">
+                      Joined{" "}
+                      {new Date(employee.joinDate).toLocaleDateString("en-US", {
+                        month: "short",
+                        year: "numeric",
+                      })}
                     </div>
                   </div>
-                </td>
+                </div>
+              </td>
 
-                <td className="px-6 py-4">
-                  <span
-                    className={`px-2 py-1 rounded-md text-xs font-medium ${getRoleColor(
-                      roleName || ""
-                    )}`}
+              <td className="px-6 py-4">
+                <span
+                  className={`px-2 py-1 rounded-md text-xs font-medium ${getRoleColor(
+                    employee.role?.name || ""
+                  )}`}
+                >
+                  {employee.role?.name || "N/A"}
+                </span>
+              </td>
+
+              <td className="px-6 py-4">
+                <div>{employee.phone}</div>
+                <div className="text-xs text-muted-foreground">
+                  {employee.email}
+                </div>
+              </td>
+
+              <td className="px-6 py-4">
+                ⭐ {employee.performanceMetrics.customerRating.toFixed(1)}
+              </td>
+
+              <td className="px-6 py-4">
+                {getWorkingDays(employee.availability)}
+              </td>
+
+              <td className="px-6 py-4">
+                INR{" "}
+                {employee.performanceMetrics.revenueGenerated.toLocaleString()}
+              </td>
+
+              <td className="px-6 py-4">
+                {employee.status === "active" ? "Active" : "Inactive"}
+              </td>
+
+              <td className="px-6 py-4 text-right">
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEdit(employee);
+                    }}
                   >
-                    {roleName || "N/A"}
-                  </span>
-                </td>
-
-                <td className="px-6 py-4">
-                  <div>{employee.phone}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {employee.email}
-                  </div>
-                </td>
-
-                <td className="px-6 py-4">
-                  ⭐ {employee.performanceMetrics.customerRating.toFixed(1)}
-                </td>
-
-                <td className="px-6 py-4">
-                  {getWorkingDays(employee.availability)}
-                </td>
-
-                <td className="px-6 py-4">
-                  INR{" "}
-                  {employee.performanceMetrics.revenueGenerated.toLocaleString()}
-                </td>
-
-                <td className="px-6 py-4">
-                  {employee.status === "active" ? "Active" : "Inactive"}
-                </td>
-
-                <td className="px-6 py-4 text-right">
-                  <div className="flex justify-end gap-2">
-                    <button onClick={(e) => { e.stopPropagation(); onEdit(employee); }}>
-                      <Icon name="Edit" size={16} />
-                    </button>
-                    <button onClick={(e) => { e.stopPropagation(); onDelete(employee.id); }}>
-                      <Icon name="Trash" size={16} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
+                    <Icon name="Edit" size={16} />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete(employee.id);
+                    }}
+                  >
+                    <Icon name="Trash" size={16} />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

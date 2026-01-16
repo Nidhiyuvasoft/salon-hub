@@ -171,7 +171,6 @@ const StaffManagement = () => {
       label: role.name,
     })),
   ];
-  console.log(selectedEmployee)
 
   const handleViewDetails = async (employee: Employee) => {
     try {
@@ -377,7 +376,7 @@ const StaffManagement = () => {
               {employees.map((employee) => (
                 <MobileEmployeeCard
                   key={employee.id}
-                  role={roles}
+                  // role={roles}
                   onDelete={handleDeleteClick}
                   employee={employee}
                   onEdit={handleEditEmployee}
@@ -389,7 +388,6 @@ const StaffManagement = () => {
           ) : (
             <EmployeeTable
               employees={employees}
-              roles= {roles}
               onDelete={handleDeleteClick}
               onEdit={handleEditEmployee}
               onToggleStatus={handleToggleStatus}
@@ -497,6 +495,8 @@ const StaffManagement = () => {
             setEditingEmployee(null);
             fetchEmployees();
           }}
+          role={roles}
+          setRole={setRoles}
         />
       )}
 
