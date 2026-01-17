@@ -20,7 +20,7 @@ const MobileCustomerCard = ({
       SPECIAL: "bg-primary text-primary-foreground",
     };
 
-    return colors[tag?.name ?? ""] ?? "bg-muted text-muted-foreground";
+    return colors[tag];
   };
 
   const formatDate = (date: Date | null): string => {
@@ -63,12 +63,12 @@ const MobileCustomerCard = ({
           <div className="flex flex-wrap gap-1">
             {customer.tags.map((tag) => (
               <span
-                key={tag._id}
+                key={tag}
                 className={`px-2 py-0.5 rounded-md text-xs font-medium ${getTagColor(
                   tag
                 )}`}
               >
-                {tag.name}
+                {tag}
               </span>
             ))}
           </div>
