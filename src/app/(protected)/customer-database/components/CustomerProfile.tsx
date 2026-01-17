@@ -65,7 +65,7 @@ const CustomerProfile = ({
       SPECIAL: "bg-primary text-primary-foreground",
     };
 
-    return colors[tag?.name ?? ""] ?? "bg-muted text-muted-foreground";
+    return colors[tag];
   };
 
   const formatDate = (date: Date): string => {
@@ -129,12 +129,12 @@ const CustomerProfile = ({
                     <div className="flex flex-wrap gap-2">
                       {customer?.tags.map((tag) => (
                         <span
-                          key={tag._id}
+                          key={tag}
                           className={`px-2 py-1 rounded-md text-xs font-medium ${getTagColor(
                             tag
                           )}`}
                         >
-                          {tag.name ? `${tag.name}` : "N/A" }
+                          {tag}
                         </span>
                       ))}
                     </div>
