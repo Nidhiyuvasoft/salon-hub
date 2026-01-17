@@ -257,8 +257,10 @@ const CustomerDatabase = () => {
         dateOfBirth: c.DOB.split("T")[0],
         address: c.address || "",
         notes: c.notes || "",
-        tags: c.customerTag || [],
-        lastVisit: c.lastVisit ? new Date(c.lastVisit) : null,
+        tags: (c.customerTag || []).map((tag: any) =>
+          typeof tag === "string" ? tag : tag.name
+        ),
+        lastVisit: c.lastVisit ? new Date(c.lastVisit) : undefined, 
         totalVisits: c.totalVisits,
         totalSpent: c.totalSpent,
         createdAt: new Date(c.createdAt),
