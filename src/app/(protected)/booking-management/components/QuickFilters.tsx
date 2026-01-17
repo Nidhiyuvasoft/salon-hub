@@ -79,7 +79,7 @@ const QuickFilters = ({
           searchable
         />
 
-        <Select
+        {/* <Select
           label="Service"
           options={serviceOptions}
           value={filters.serviceId || ''}
@@ -87,7 +87,7 @@ const QuickFilters = ({
             onFiltersChange({ ...filters, serviceId: value || undefined })
           }
           searchable
-        />
+        /> */}
       </div>
     </div>
   );

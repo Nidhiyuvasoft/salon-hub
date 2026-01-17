@@ -16,10 +16,7 @@ export interface Customer {
   avatar?: string;
 }
 
-export interface CustomerTag {
-  _id?: string;
-  name?: string;
-}
+export type CustomerTag = string;
 
 export interface ServiceHistory {
   id: string;

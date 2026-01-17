@@ -29,7 +29,7 @@ const getValidationSchema = (isEditMode: boolean) =>
       .required("Date of birth is required"),
     password: isEditMode
       ? Yup.string()
-      : Yup.string().min(8, "Minimum 8 characters")
+      : Yup.string().min(8, "Minimum 8 characters"),
   });
 
 interface CustomerFormProps {
@@ -194,8 +194,7 @@ const CustomerForm = ({
             notes: editingCustomer?.notes || "",
             gender: editingCustomer?.gender || "female",
             dateOfBirth: editingCustomer?.dateOfBirth || "",
-            tags:
-              editingCustomer?.tags?.map((t) => t._id!).filter(Boolean) || [],
+            tags: editingCustomer?.tags || ([] as CustomerTag[]),
             preferredStaff: editingCustomer?.preferredStaff
               ? getPreferredStaffId(editingCustomer.preferredStaff)
               : "",
