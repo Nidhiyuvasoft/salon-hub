@@ -12,7 +12,7 @@ interface Role {
 
 interface MobileEmployeeCardProps {
   employee: Employee;
-  role: Role[];
+  role?: Role[];
   onEdit: (employee: Employee) => void;
   onToggleStatus: (employeeId: string) => void;
   onViewDetails: (employee: Employee) => void;
@@ -21,7 +21,6 @@ interface MobileEmployeeCardProps {
 
 const MobileEmployeeCard = ({
   employee,
-  role,
   onEdit,
   onToggleStatus,
   onViewDetails,
@@ -40,12 +39,7 @@ const MobileEmployeeCard = ({
     return colors[role] || 'bg-gray-100 text-gray-800';
   };
 
-  // ✅ ONLY ROLE FIX
-  const roleName =
-    typeof employee.role === 'object' && employee.role?.name
-      ? employee.role?.name
-      : 'N/A';
-
+  const roleName = employee?.role?.name || "N/A";
   return (
     <div className="bg-card rounded-lg border border-border p-4 space-y-4">
       <div className="flex items-start gap-3">

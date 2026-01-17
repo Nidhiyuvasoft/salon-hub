@@ -19,7 +19,7 @@ const CustomerTable = ({
   onCustomerSelect,
   onEditCustomer,
   selectedCustomerId,
-  onCustomerDeleted
+  onCustomerDeleted,
 }: CustomerTableProps) => {
   const [sortBy, setSortBy] = useState<
     "name" | "lastVisit" | "totalVisits" | "totalSpent"
@@ -32,12 +32,14 @@ const CustomerTable = ({
   const [deleting, setDeleting] = useState(false);
 
   const getTagColor = (tag: CustomerTag): string => {
-    const colors: Record<CustomerTag, string> = {
-      VIP: "bg-accent text-accent-foreground",
-      New: "bg-primary text-primary-foreground",
-      Frequent: "bg-success text-success-foreground",
-      Inactive: "bg-muted text-muted-foreground",
+    const colors: Record<string, string> = {
+      VIP: " text-accent-foreground",
+      New: " text-primary-foreground",
+      Frequent: "text-success-foreground",
+      Inactive: "text-muted-foreground",
+      SPECIAL: "text-primary-foreground",
     };
+
     return colors[tag];
   };
 
@@ -81,7 +83,7 @@ const CustomerTable = ({
 
     return sortOrder === "asc" ? comparison : -comparison;
   });
-  
+
   const handleDeleteCustomer = async () => {
     if (!customerToDelete) return;
 
@@ -225,7 +227,7 @@ const CustomerTable = ({
                           tag
                         )}`}
                       >
-                        {tag}
+                       {tag}
                       </span>
                     ))}
                   </div>
@@ -255,11 +257,7 @@ const CustomerTable = ({
                       className="p-2 rounded-md hover:bg-muted transition-smooth"
                       aria-label="View customer details"
                     >
-                      <Icon
-                        name="Eye"
-                        size={16}
-                        className="text-destructive"
-                      />
+                      <Icon name="Eye" size={16} className="text-destructive" />
                     </button>
 
                     <button

@@ -14,7 +14,6 @@ import Loader from "@/app/components/Loader";
 import { CustomerFormikValues, CustomerTag, Customer } from "../types";
 import { customerApi } from "@/app/services/customer.api";
 import { staffApi } from "@/app/services/staff.api";
-import { customerTagApi } from "@/app/services/tags.api";
 
 const getValidationSchema = (isEditMode: boolean) =>
   Yup.object({
@@ -24,7 +23,10 @@ const getValidationSchema = (isEditMode: boolean) =>
       .required("Phone number is required"),
     email: Yup.string().email("Invalid email"),
     gender: Yup.string().required(),
-    dateOfBirth: Yup.string().required("Date of birth is required"),
+    dateOfBirth: Yup.date()
+      .typeError("Invalid date of birth")
+      .max(new Date(), "Date of birth cannot be in the future")
+      .required("Date of birth is required"),
     password: isEditMode
       ? Yup.string()
       : Yup.string().min(8, "Minimum 8 characters"),
@@ -34,18 +36,22 @@ interface CustomerFormProps {
   onClose: () => void;
   editingCustomer?: Customer;
   onSuccess?: () => void;
+  customerTags: {
+    _id: string;
+    name: string;
+  }[];
 }
 
 const CustomerForm = ({
   onClose,
   editingCustomer,
   onSuccess,
+  customerTags,
 }: CustomerFormProps) => {
   const isEditMode = !!editingCustomer;
-  //const tagOptions: CustomerTag[] = ["VIP", "New", "Frequent", "Inactive"];
 
-  const [customerTags, setCustomerTags] = useState<any[]>([]);
-  const [loadingTags, setLoadingTags] = useState(false);
+  // const [customerTags, setCustomerTags] = useState<any[]>([]);
+  // const [loadingTags, setLoadingTags] = useState(false);
   const [staff, setStaff] = useState<any[]>([]);
   const [loadingStaff, setLoadingStaff] = useState(false);
   const fetchingStaffRef = useRef(false);
@@ -106,27 +112,28 @@ const CustomerForm = ({
   };
 
   //Fetch CustomerTags API:-
-  useEffect(() => {
-    const fetchCustomerTags = async () => {
-      try {
-        setLoadingTags(true);
-        const res = await customerTagApi.getAllCustomerTags();
-        const list = res?.data || [];
-        setCustomerTags(
-          list.map((tag: any) => ({
-            value: tag._id,
-            label: tag.name,
-          }))
-        );
-      } catch (error) {
-        console.error("Failed to fetch customer tags", error);
-        setCustomerTags([]);
-      } finally {
-        setLoadingTags(false);
-      }
-    };
-    fetchCustomerTags();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCustomerTags = async () => {
+  //     try {
+  //       setLoadingTags(true);
+  //       const res = await customerTagApi.getAllCustomerTags();
+  //       const list = res?.data || [];
+  //       console.log(list);
+  //       setCustomerTags(
+  //         list.map((tag: any) => ({
+  //           value: tag._id,
+  //           label: tag.name,
+  //         }))
+  //       );
+  //     } catch (error) {
+  //       console.error("Failed to fetch customer tags", error);
+  //       setCustomerTags([]);
+  //     } finally {
+  //       setLoadingTags(false);
+  //     }
+  //   };
+  //   fetchCustomerTags();
+  // }, []);
 
   const addCustomer = async (values: CustomerFormikValues) => {
     try {
@@ -187,7 +194,8 @@ const CustomerForm = ({
             notes: editingCustomer?.notes || "",
             gender: editingCustomer?.gender || "female",
             dateOfBirth: editingCustomer?.dateOfBirth || "",
-            tags: editingCustomer?.tags || ([] as CustomerTag[]),
+            tags:
+              editingCustomer?.tags || ([] as CustomerTag[]),
             preferredStaff: editingCustomer?.preferredStaff
               ? getPreferredStaffId(editingCustomer.preferredStaff)
               : "",
@@ -277,31 +285,26 @@ const CustomerForm = ({
                   Customer Tags
                 </label>
 
-                {loadingTags ? (
-                  <div className="text-sm text-muted-foreground">
-                    Loading tags...
-                  </div>
-                ) : customerTags.length === 0 ? (
+                {customerTags.length === 0 ? (
                   <div className="text-sm text-muted-foreground">
                     No tags available
                   </div>
                 ) : (
                   <div className="flex flex-wrap gap-4">
                     {customerTags.map((tag) => (
-                      <label key={tag.value} className="flex gap-2">
+                      <label key={tag._id} className="flex gap-2">
                         <Checkbox
-                          className="pt-1"
-                          checked={values.tags.includes(tag.value)}
+                          checked={values.tags.includes(tag._id)}
                           onChange={() =>
                             setFieldValue(
                               "tags",
-                              values.tags.includes(tag.value)
-                                ? values.tags.filter((t) => t !== tag.value)
-                                : [...values.tags, tag.value]
+                              values.tags.includes(tag._id)
+                                ? values.tags.filter((t) => t !== tag._id)
+                                : [...values.tags, tag._id]
                             )
                           }
                         />
-                        {tag.label}
+                        {tag.name}
                       </label>
                     ))}
                   </div>
