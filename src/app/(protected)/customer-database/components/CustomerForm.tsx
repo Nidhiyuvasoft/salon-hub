@@ -194,7 +194,8 @@ const CustomerForm = ({
             notes: editingCustomer?.notes || "",
             gender: editingCustomer?.gender || "female",
             dateOfBirth: editingCustomer?.dateOfBirth || "",
-            tags: editingCustomer?.tags || ([] as CustomerTag[]),
+            tags:
+              editingCustomer?.tags || ([] as CustomerTag[]),
             preferredStaff: editingCustomer?.preferredStaff
               ? getPreferredStaffId(editingCustomer.preferredStaff)
               : "",
