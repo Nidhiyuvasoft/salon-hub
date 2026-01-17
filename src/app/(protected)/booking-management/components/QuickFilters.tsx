@@ -65,7 +65,7 @@ const QuickFilters = ({
           options={statusOptions}
           value={filters.status || ''}
           onChange={(value) =>
-            onFiltersChange({ ...filters, status: value as any })
+            onFiltersChange({ ...filters, status: value? (value as any) : undefined })
           }
         />
 
@@ -74,7 +74,7 @@ const QuickFilters = ({
           options={staffOptions}
           value={filters.staffId || ''}
           onChange={(value) =>
-            onFiltersChange({ ...filters, staffId: value as string })
+            onFiltersChange({ ...filters, staffId: value || undefined })
           }
           searchable
         />
@@ -84,7 +84,7 @@ const QuickFilters = ({
           options={serviceOptions}
           value={filters.serviceId || ''}
           onChange={(value) =>
-            onFiltersChange({ ...filters, serviceId: value as string })
+            onFiltersChange({ ...filters, serviceId: value || undefined })
           }
           searchable
         />

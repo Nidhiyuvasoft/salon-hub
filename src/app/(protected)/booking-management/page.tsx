@@ -77,7 +77,11 @@ const BookingManagement = () => {
           setLoading(false);
           return;
         }
-        res = await appointmentApi.getStaffAppointments({ limit: 1000, staffId, role: "STAFF" });
+        res = await appointmentApi.getStaffAppointments({
+          limit: 1000,
+          staffId,
+          role: "STAFF",
+        });
       } else {
         res = await appointmentApi.getAllAppointments({ limit: 1000 });
       }
@@ -144,6 +148,13 @@ const BookingManagement = () => {
           notes: b.notes,
           paymentStatus: b.paymentStatus || "pending",
           createdAt: new Date(b.createdAt),
+
+          commisionEarned:
+            typeof b.commisionEarned === "number"
+              ? b.commisionEarned
+              : Array.isArray(b.commisionEarned)
+              ? b.commisionEarned.reduce((a: number, c: number) => a + c, 0)
+              : 0,
         };
       });
 
@@ -245,7 +256,6 @@ const BookingManagement = () => {
       dispatch(fetchProfileTimings());
     }
   }, [dispatch, isStaffUser]);
-  
 
   useEffect(() => {
     mountedRef.current = true;
@@ -296,41 +306,44 @@ const BookingManagement = () => {
     // If today is not a working day, return empty slots or closed indication
     // For now, let's return empty slots effectively disabling the day
     if (!workingDays.includes(currentDayOfWeek)) {
-       return [];
+      return [];
     }
 
-
     const slots: TimeSlot[] = [];
-    
+
     // Convert everything to minutes for easier comparison
     const startTotalMinutes = startHour * 60 + startMinute;
     const endTotalMinutes = endHour * 60 + endMinute;
 
     // Generate slots
-    for (let timeInMinutes = startTotalMinutes; timeInMinutes < endTotalMinutes; timeInMinutes += 30) {
-        const hour = Math.floor(timeInMinutes / 60);
-        const minute = timeInMinutes % 60;
-        
-        const time = `${hour.toString().padStart(2, "0")}:${minute
-          .toString()
-          .padStart(2, "0")}`;
-          
-        const slotBookings = bookings.filter(
-          (b) =>
-            b.date.toDateString() === currentDate.toDateString() &&
-            b.startTime === time &&
-            (!filters.status || b.status === filters.status) &&
-            (!filters.staffId || b.staffId === filters.staffId) &&
-            (!filters.serviceId || b.serviceId === filters.serviceId)
-        );
-        
-        slots.push({
-          time,
-          isAvailable: slotBookings.length === 0,
-          bookings: slotBookings,
-        });
+    for (
+      let timeInMinutes = startTotalMinutes;
+      timeInMinutes < endTotalMinutes;
+      timeInMinutes += 30
+    ) {
+      const hour = Math.floor(timeInMinutes / 60);
+      const minute = timeInMinutes % 60;
+
+      const time = `${hour.toString().padStart(2, "0")}:${minute
+        .toString()
+        .padStart(2, "0")}`;
+
+      const slotBookings = bookings.filter(
+        (b) =>
+          b.date.toDateString() === currentDate.toDateString() &&
+          b.startTime === time &&
+          (!filters.status || b.status === filters.status) &&
+          (!filters.staffId || b.staffId === filters.staffId) &&
+          (!filters.serviceId || b.serviceId === filters.serviceId)
+      );
+
+      slots.push({
+        time,
+        isAvailable: slotBookings.length === 0,
+        bookings: slotBookings,
+      });
     }
-    
+
     return slots;
   };
 
@@ -416,6 +429,7 @@ const BookingManagement = () => {
     try {
       // API CALL
       const data = await appointmentApi.getAppointmentDetails(bookingId);
+      console.log(data);
       if (!data) return;
 
       // MAP RESPONSE → Booking type used by modal
@@ -424,7 +438,6 @@ const BookingManagement = () => {
         customerId: data.customerId?._id,
         customerName: data.customerId?.fullName || "Unknown Customer",
         customerPhone: data.customerId?.phoneNumber,
-
         serviceId: data.services?.[0]?._id || "",
         serviceName: data.services?.map((s: any) => s.serviceName).join(", "),
         serviceCategory: "General",
@@ -598,6 +611,8 @@ const BookingManagement = () => {
 
                     {viewMode === "viewAll" && (
                       <ViewAllAppointments
+                        bookings={bookings}
+                        filters={filters}
                         onBookingClick={handleBookingClick}
                       />
                     )}
